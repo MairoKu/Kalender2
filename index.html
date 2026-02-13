@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <title>Ühine broneeringute kalender</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div>
+    <h1>Ühine broneeringute kalender</h1>
+
+    <div class="container">
+
+        <!-- LOGIN -->
+        <div id="loginSection">
+            <h2>Logi sisse</h2>
+            <input type="text" id="username" placeholder="Kasutajanimi">
+            <input type="password" id="password" placeholder="Parool">
+            <button onclick="login()">Logi sisse</button>
+            <button onclick="register()">Registreeri</button>
+        </div>
+
+        <!-- KALENDER -->
+        <div id="calendarSection" style="display:none;">
+            <h2>Broneeringud</h2>
+
+            <input type="date" id="date">
+            <input type="time" id="start">
+            <input type="time" id="end">
+            <input type="text" id="title" placeholder="Kirjeldus">
+            <button onclick="addBooking()">Lisa broneering</button>
+            <button onclick="logout()">Logi välja</button>
+
+            <h3>Olemasolevad broneeringud:</h3>
+            <ul id="bookingList"></ul>
+        </div>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
