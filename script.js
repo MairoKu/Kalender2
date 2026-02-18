@@ -90,8 +90,9 @@ function showCalendar() {
 // --- FORMATEERI KUUPÄEV ja 24h kellaaeg ---
 function formatDateTime(dateStr, timeStr) {
     if (!dateStr || !timeStr) return "";
-    let d = new Date(dateStr + "T" + timeStr);
-    return d.toLocaleString("et-EE", { hour12: false });
+    let [hour, minute] = timeStr.split(":");
+    let [year, month, day] = dateStr.split("-");
+    return `${day}.${month}.${year} ${hour}:${minute}`;
 }
 
 // --- KONTROLLI TOPPEKIMIST ---
@@ -196,3 +197,4 @@ window.onload = function() {
         }
     }
 };
+
