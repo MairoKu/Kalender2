@@ -2,44 +2,48 @@
 <html lang="et">
 <head>
     <meta charset="UTF-8">
-    <title>Ühine broneeringute kalender</title>
+    <title>Ühine Broneeringute Kalender</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div>
-    <h1>Ühine broneeringute kalender</h1>
+<div class="container">
 
-    <div class="container">
+    <h1>Ühine Broneeringute Kalender</h1>
 
-        <!-- LOGIN -->
-        <div id="loginSection">
-            <h2>Logi sisse</h2>
-            <input type="text" id="username" placeholder="Kasutajanimi">
-            <input type="password" id="password" placeholder="Parool">
-            <button onclick="login()">Logi sisse</button>
-            <button onclick="register()">Registreeri</button>
-        </div>
-
-        <!-- KALENDER -->
-        <div id="calendarSection" style="display:none;">
-            <h2>Broneeringud</h2>
-
-            <input type="date" id="date">
-            <input type="time" id="start">
-            <input type="time" id="end">
-            <input type="text" id="title" placeholder="Kirjeldus">
-            <button onclick="addBooking()">Lisa broneering</button>
-            <button onclick="logout()">Logi välja</button>
-
-            <h3>Olemasolevad broneeringud:</h3>
-            <ul id="bookingList"></ul>
-        </div>
-
+    <!-- LOGIN -->
+    <div id="loginSection">
+        <h2>Logi sisse</h2>
+        <input type="text" id="username" placeholder="Kasutajanimi">
+        <input type="password" id="password" placeholder="Parool">
+        <button onclick="login()">Logi sisse</button>
+        <button onclick="register()">Registreeri</button>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <!-- CALENDAR -->
+    <div id="calendarSection" style="display:none;">
+        <div class="topbar">
+            <span id="currentUser"></span>
+            <button onclick="logout()">Logi välja</button>
+        </div>
 
-</body>
-</html>
+        <h2>Lisa broneering</h2>
+
+        <select id="room">
+            <option value="A101">A101</option>
+            <option value="A102">A102</option>
+            <option value="B201">B201</option>
+            <option value="C301">C301</option>
+        </select>
+
+        <input type="date" id="date">
+        <input type="time" id="start">
+        <input type="time" id="end">
+        <input type="text" id="title" placeholder="Broneeringu põhjus">
+        <button onclick="addBooking()">Lisa</button>
+
+        <h2>Hetke info</h2>
+        <p id="currentBooking">Hetkel ei toimu broneeringut</p>
+        <p id="nextBooking">Järgmine broneering puudub</p>
+
+        <h2>Kõi
