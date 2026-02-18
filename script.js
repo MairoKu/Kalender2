@@ -1,4 +1,4 @@
-let selectedClass = ""; // salvestab, millise klassi kasutaja valis
+let selectedClass = ""; // kasutaja valitud klass
 
 function getUsers() {
     return JSON.parse(localStorage.getItem("users")) || [];
@@ -49,7 +49,6 @@ function login() {
 
     if (user) {
         localStorage.setItem("loggedInUser", username);
-        // Näita klassi valiku ekraani
         document.getElementById("loginSection").style.display = "none";
         document.getElementById("classSelectSection").style.display = "block";
     } else {
@@ -126,7 +125,6 @@ function addBooking() {
     }
 
     let bookings = getBookings();
-
     bookings.push({
         room,
         date,
@@ -134,22 +132,22 @@ function addBooking() {
         end,
         title,
         user,
-        cls // salvestame ka klassi
+        cls // salvestame klassi
     });
 
     saveBookings(bookings);
     displayBookings();
 }
 
-// --- NÄITAME BRONEERINGUID ---
+// --- NÄITA BRONEERINGUID ---
 function displayBookings() {
     let list = document.getElementById("bookingList");
     list.innerHTML = "";
 
     let bookings = getBookings();
-
-    // Filtreeri ainult valitud klassi broneeringud
     let cls = localStorage.getItem("userClass");
+
+    // Näita ainult valitud klassi broneeringuid
     bookings = bookings.filter(b => b.cls === cls);
 
     bookings.sort((a, b) =>
