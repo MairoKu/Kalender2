@@ -27,7 +27,6 @@ function register() {
     }
 
     let users = getUsers();
-
     if (users.find(u => u.username === username)) {
         alert("Kasutajanimi juba olemas!");
         return;
@@ -126,15 +125,7 @@ function addBooking() {
     }
 
     let bookings = getBookings();
-    bookings.push({
-        room,
-        date,
-        start,
-        end,
-        title,
-        user,
-        cls // salvestame klassi
-    });
+    bookings.push({ room, date, start, end, title, user, cls });
 
     saveBookings(bookings);
     displayBookings();
@@ -148,7 +139,6 @@ function displayBookings() {
     let bookings = getBookings();
     let cls = localStorage.getItem("userClass");
 
-    // Näita ainult valitud klassi broneeringuid
     bookings = bookings.filter(b => b.cls === cls);
 
     bookings.sort((a, b) =>
@@ -169,11 +159,7 @@ function displayBookings() {
 
         let li = document.createElement("li");
         li.innerText =
-            `Ruum: ${b.room} | ` +
-            `Algus: ${formatDateTime(b.date, b.start)} | ` +
-            `Lõpp: ${formatDateTime(b.date, b.end)} | ` +
-            `Põhjus: ${b.title} | ` +
-            `Kasutaja: ${b.user}`;
+            `Ruum: ${b.room} | Algus: ${formatDateTime(b.date, b.start)} | Lõpp: ${formatDateTime(b.date, b.end)} | Põhjus: ${b.title} | Kasutaja: ${b.user}`;
         list.appendChild(li);
     });
 
@@ -197,4 +183,3 @@ window.onload = function() {
         }
     }
 };
-
