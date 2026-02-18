@@ -2,7 +2,6 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to right, #4e73df, #1cc88a);
     margin: 0;
-    padding: 0;
 }
 
 .container {
@@ -19,16 +18,15 @@ h1, h2 {
 }
 
 input, select {
-    display: block;
     width: 100%;
     padding: 8px;
     margin: 8px 0;
 }
 
 button {
-    padding: 10px;
-    margin: 5px 0;
     width: 100%;
+    padding: 10px;
+    margin: 8px 0;
     background: #4e73df;
     color: white;
     border: none;
@@ -42,7 +40,7 @@ button:hover {
 .topbar {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    align-items: center;
 }
 
 ul {
