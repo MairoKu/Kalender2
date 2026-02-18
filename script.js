@@ -1,3 +1,5 @@
+let selectedClass = ""; // salvestab, millise klassi kasutaja valis
+
 function getUsers() {
     return JSON.parse(localStorage.getItem("users")) || [];
 }
@@ -14,6 +16,7 @@ function saveBookings(bookings) {
     localStorage.setItem("bookings", JSON.stringify(bookings));
 }
 
+// --- REGISTREERIMINE ---
 function register() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
@@ -36,6 +39,7 @@ function register() {
     alert("Kasutaja loodud!");
 }
 
+// --- LOGIN ---
 function login() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
@@ -45,33 +49,55 @@ function login() {
 
     if (user) {
         localStorage.setItem("loggedInUser", username);
-        showCalendar();
+        // Näita klassi valiku ekraani
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("classSelectSection").style.display = "block";
     } else {
         alert("Vale kasutajanimi või parool!");
     }
 }
 
+// --- KLASSI VALIK ---
+function selectClass() {
+    let cls = document.getElementById("userClass").value;
+    if (!cls) {
+        alert("Palun vali klass!");
+        return;
+    }
+    selectedClass = cls;
+    localStorage.setItem("userClass", selectedClass);
+    showCalendar();
+}
+
+// --- LOGOUT ---
 function logout() {
     localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("userClass");
     location.reload();
 }
 
+// --- NÄITA KALENDRIT ---
 function showCalendar() {
-    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("classSelectSection").style.display = "none";
     document.getElementById("calendarSection").style.display = "block";
+
     document.getElementById("currentUser").innerText =
-        "Sisselogitud: " + localStorage.getItem("loggedInUser");
+        "Sisselogitud: " + localStorage.getItem("loggedInUser") +
+        " | Klass: " + localStorage.getItem("userClass");
+
     displayBookings();
 }
 
-function formatDate(dateStr, timeStr) {
-    let date = new Date(dateStr + "T" + timeStr);
-    return date.toLocaleString("et-EE");
+// --- FORMATEERI KUUPÄEV ja 24h kellaaeg ---
+function formatDateTime(dateStr, timeStr) {
+    if (!dateStr || !timeStr) return "";
+    let d = new Date(dateStr + "T" + timeStr);
+    return d.toLocaleString("et-EE", { hour12: false });
 }
 
+// --- KONTROLLI TOPPEKIMIST ---
 function isDoubleBooking(room, date, start, end) {
     let bookings = getBookings();
-
     return bookings.find(b =>
         b.room === room &&
         b.date === date &&
@@ -79,6 +105,7 @@ function isDoubleBooking(room, date, start, end) {
     );
 }
 
+// --- LISAME BRONEERINGU ---
 function addBooking() {
     let room = document.getElementById("room").value;
     let date = document.getElementById("date").value;
@@ -86,6 +113,7 @@ function addBooking() {
     let end = document.getElementById("end").value;
     let title = document.getElementById("title").value;
     let user = localStorage.getItem("loggedInUser");
+    let cls = localStorage.getItem("userClass");
 
     if (!date || !start || !end || !title) {
         alert("Täida kõik väljad!");
@@ -105,18 +133,25 @@ function addBooking() {
         start,
         end,
         title,
-        user
+        user,
+        cls // salvestame ka klassi
     });
 
     saveBookings(bookings);
     displayBookings();
 }
 
+// --- NÄITAME BRONEERINGUID ---
 function displayBookings() {
     let list = document.getElementById("bookingList");
     list.innerHTML = "";
 
     let bookings = getBookings();
+
+    // Filtreeri ainult valitud klassi broneeringud
+    let cls = localStorage.getItem("userClass");
+    bookings = bookings.filter(b => b.cls === cls);
+
     bookings.sort((a, b) =>
         new Date(a.date + "T" + a.start) -
         new Date(b.date + "T" + b.start)
@@ -130,38 +165,36 @@ function displayBookings() {
         let startDate = new Date(b.date + "T" + b.start);
         let endDate = new Date(b.date + "T" + b.end);
 
-        if (startDate <= now && endDate >= now) {
-            current = b;
-        }
-
-        if (startDate > now && !next) {
-            next = b;
-        }
+        if (startDate <= now && endDate >= now) current = b;
+        if (startDate > now && !next) next = b;
 
         let li = document.createElement("li");
         li.innerText =
-            b.room + " | " +
-            formatDate(b.date, b.start) + " - " +
-            b.end +
-            " | " + b.title +
-            " | Kasutaja: " + b.user;
-
+            `Ruum: ${b.room} | ` +
+            `Algus: ${formatDateTime(b.date, b.start)} | ` +
+            `Lõpp: ${formatDateTime(b.date, b.end)} | ` +
+            `Põhjus: ${b.title} | ` +
+            `Kasutaja: ${b.user}`;
         list.appendChild(li);
     });
 
     document.getElementById("currentBooking").innerText =
-        current ?
-        "🔴 Hetkel: " + current.room + " - " + current.title :
-        "Hetkel ei toimu broneeringut";
+        current ? `🔴 Hetkel: ${current.room} - ${current.title} (${formatDateTime(current.date, current.start)} - ${formatDateTime(current.date, current.end)})`
+                : "Hetkel ei toimu broneeringut";
 
     document.getElementById("nextBooking").innerText =
-        next ?
-        "🟢 Järgmine: " + next.room + " - " + next.title :
-        "Järgmine broneering puudub";
+        next ? `🟢 Järgmine: ${next.room} - ${next.title} (${formatDateTime(next.date, next.start)} - ${formatDateTime(next.date, next.end)})`
+             : "Järgmine broneering puudub";
 }
 
+// --- WINDOW ONLOAD ---
 window.onload = function() {
     if (localStorage.getItem("loggedInUser")) {
-        showCalendar();
+        if (localStorage.getItem("userClass")) {
+            showCalendar();
+        } else {
+            document.getElementById("loginSection").style.display = "none";
+            document.getElementById("classSelectSection").style.display = "block";
+        }
     }
 };
