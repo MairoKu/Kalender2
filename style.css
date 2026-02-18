@@ -1,167 +1,62 @@
-function getUsers() {
-    return JSON.parse(localStorage.getItem("users")) || [];
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #4e73df, #1cc88a);
+    margin: 0;
 }
 
-function saveUsers(users) {
-    localStorage.setItem("users", JSON.stringify(users));
+.container {
+    background: white;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-function getBookings() {
-    return JSON.parse(localStorage.getItem("bookings")) || [];
+h1, h2 {
+    text-align: center;
 }
 
-function saveBookings(bookings) {
-    localStorage.setItem("bookings", JSON.stringify(bookings));
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
 }
 
-function register() {
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-
-    if (!username || !password) {
-        alert("Täida kõik väljad!");
-        return;
-    }
-
-    let users = getUsers();
-
-    if (users.find(u => u.username === username)) {
-        alert("Kasutajanimi juba olemas!");
-        return;
-    }
-
-    users.push({ username, password });
-    saveUsers(users);
-
-    alert("Kasutaja loodud!");
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px 0;
 }
 
-function login() {
-    let username = document.getElementById("username").value;
-    let password = document.getElementById("password").value;
-
-    let users = getUsers();
-    let user = users.find(u => u.username === username && u.password === password);
-
-    if (user) {
-        localStorage.setItem("loggedInUser", username);
-        showCalendar();
-    } else {
-        alert("Vale kasutajanimi või parool!");
-    }
+button {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    background: #4e73df;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-function logout() {
-    localStorage.removeItem("loggedInUser");
-    location.reload();
+button:hover {
+    background: #2e59d9;
 }
 
-function showCalendar() {
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("calendarSection").style.display = "block";
-    document.getElementById("currentUser").innerText =
-        "Sisselogitud: " + localStorage.getItem("loggedInUser");
-    displayBookings();
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-function formatDate(dateStr, timeStr) {
-    let date = new Date(dateStr + "T" + timeStr);
-    return date.toLocaleString("et-EE");
+ul {
+    list-style: none;
+    padding: 0;
 }
 
-function isDoubleBooking(room, date, start, end) {
-    let bookings = getBookings();
-
-    return bookings.find(b =>
-        b.room === room &&
-        b.date === date &&
-        !(b.end <= start || b.start >= end)
-    );
+li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
 }
-
-function addBooking() {
-    let room = document.getElementById("room").value;
-    let date = document.getElementById("date").value;
-    let start = document.getElementById("start").value;
-    let end = document.getElementById("end").value;
-    let title = document.getElementById("title").value;
-    let user = localStorage.getItem("loggedInUser");
-
-    if (!date || !start || !end || !title) {
-        alert("Täida kõik väljad!");
-        return;
-    }
-
-    if (isDoubleBooking(room, date, start, end)) {
-        alert("See ruum on sellel ajal juba broneeritud!");
-        return;
-    }
-
-    let bookings = getBookings();
-
-    bookings.push({
-        room,
-        date,
-        start,
-        end,
-        title,
-        user
-    });
-
-    saveBookings(bookings);
-    displayBookings();
-}
-
-function displayBookings() {
-    let list = document.getElementById("bookingList");
-    list.innerHTML = "";
-
-    let bookings = getBookings();
-    bookings.sort((a, b) =>
-        new Date(a.date + "T" + a.start) -
-        new Date(b.date + "T" + b.start)
-    );
-
-    let now = new Date();
-    let current = null;
-    let next = null;
-
-    bookings.forEach(b => {
-        let startDate = new Date(b.date + "T" + b.start);
-        let endDate = new Date(b.date + "T" + b.end);
-
-        if (startDate <= now && endDate >= now) {
-            current = b;
-        }
-
-        if (startDate > now && !next) {
-            next = b;
-        }
-
-        let li = document.createElement("li");
-        li.innerText =
-            b.room + " | " +
-            formatDate(b.date, b.start) + " - " +
-            b.end +
-            " | " + b.title +
-            " | Kasutaja: " + b.user;
-
-        list.appendChild(li);
-    });
-
-    document.getElementById("currentBooking").innerText =
-        current ?
-        "🔴 Hetkel: " + current.room + " - " + current.title :
-        "Hetkel ei toimu broneeringut";
-
-    document.getElementById("nextBooking").innerText =
-        next ?
-        "🟢 Järgmine: " + next.room + " - " + next.title :
-        "Järgmine broneering puudub";
-}
-
-window.onload = function() {
-    if (localStorage.getItem("loggedInUser")) {
-        showCalendar();
-    }
-};
