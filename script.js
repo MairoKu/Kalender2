@@ -18,14 +18,21 @@ function register() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
+    if (!username || !password) {
+        alert("Täida kõik väljad!");
+        return;
+    }
+
     let users = getUsers();
+
     if (users.find(u => u.username === username)) {
         alert("Kasutajanimi juba olemas!");
         return;
     }
 
-    users.push({username, password});
+    users.push({ username, password });
     saveUsers(users);
+
     alert("Kasutaja loodud!");
 }
 
@@ -40,7 +47,7 @@ function login() {
         localStorage.setItem("loggedInUser", username);
         showCalendar();
     } else {
-        alert("Vale kasutajanimi või parool");
+        alert("Vale kasutajanimi või parool!");
     }
 }
 
@@ -57,13 +64,14 @@ function showCalendar() {
     displayBookings();
 }
 
-function formatDateTime(dateStr, timeStr) {
+function formatDate(dateStr, timeStr) {
     let date = new Date(dateStr + "T" + timeStr);
     return date.toLocaleString("et-EE");
 }
 
 function isDoubleBooking(room, date, start, end) {
     let bookings = getBookings();
+
     return bookings.find(b =>
         b.room === room &&
         b.date === date &&
@@ -79,15 +87,28 @@ function addBooking() {
     let title = document.getElementById("title").value;
     let user = localStorage.getItem("loggedInUser");
 
+    if (!date || !start || !end || !title) {
+        alert("Täida kõik väljad!");
+        return;
+    }
+
     if (isDoubleBooking(room, date, start, end)) {
         alert("See ruum on sellel ajal juba broneeritud!");
         return;
     }
 
     let bookings = getBookings();
-    bookings.push({room, date, start, end, title, user});
-    saveBookings(bookings);
 
+    bookings.push({
+        room,
+        date,
+        start,
+        end,
+        title,
+        user
+    });
+
+    saveBookings(bookings);
     displayBookings();
 }
 
@@ -96,7 +117,10 @@ function displayBookings() {
     list.innerHTML = "";
 
     let bookings = getBookings();
-    bookings.sort((a,b) => new Date(a.date+"T"+a.start) - new Date(b.date+"T"+b.start));
+    bookings.sort((a, b) =>
+        new Date(a.date + "T" + a.start) -
+        new Date(b.date + "T" + b.start)
+    );
 
     let now = new Date();
     let current = null;
@@ -117,10 +141,11 @@ function displayBookings() {
         let li = document.createElement("li");
         li.innerText =
             b.room + " | " +
-            formatDateTime(b.date, b.start) + " - " +
+            formatDate(b.date, b.start) + " - " +
             b.end +
             " | " + b.title +
             " | Kasutaja: " + b.user;
+
         list.appendChild(li);
     });
 
