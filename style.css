@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     background: linear-gradient(to right, #4e73df, #1cc88a);
     margin: 0;
+    color: #333;
 }
 
 .container {
@@ -15,8 +16,8 @@ body {
 
 h1, h2 {
     text-align: center;
+    color: #2e59d9;
 }
-
 
 label {
     font-weight: bold;
@@ -54,6 +55,7 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 ul {
@@ -69,4 +71,18 @@ li {
     background-color: #f8f9fc;
 }
 
+.bookingStatus p {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
 
+#currentBooking {
+    background-color: #f28b82; /* punane */
+    color: white;
+}
+
+#nextBooking {
+    background-color: #34a853; /* roheline */
+    color: white;
+}
