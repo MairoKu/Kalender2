@@ -14,10 +14,28 @@
     <!-- LOGIN -->
     <div id="loginSection">
         <h2>Logi sisse</h2>
+        <label for="username">Kasutajanimi:</label>
         <input type="text" id="username" placeholder="Kasutajanimi">
+
+        <label for="password">Parool:</label>
         <input type="password" id="password" placeholder="Parool">
+
         <button onclick="login()">Logi sisse</button>
         <button onclick="register()">Registreeri</button>
+    </div>
+
+    <!-- VALI KLASS/ RUUM -->
+    <div id="classSelectSection" style="display:none;">
+        <h2>Vali klass/ruum</h2>
+        <label for="userClass">Klass/ruum:</label>
+        <select id="userClass">
+            <option value="">-- Vali klass --</option>
+            <option value="A101">A101</option>
+            <option value="A102">A102</option>
+            <option value="B201">B201</option>
+            <option value="C301">C301</option>
+        </select>
+        <button onclick="selectClass()">Vali</button>
     </div>
 
     <!-- KALENDER -->
@@ -30,6 +48,7 @@
 
         <h2>Lisa broneering</h2>
 
+        <label for="room">Vali ruum:</label>
         <select id="room">
             <option value="A101">A101</option>
             <option value="A102">A102</option>
@@ -37,10 +56,17 @@
             <option value="C301">C301</option>
         </select>
 
+        <label for="date">Kuupäev:</label>
         <input type="date" id="date">
+
+        <label for="start">Algusaeg:</label>
         <input type="time" id="start">
+
+        <label for="end">Lõppaeg:</label>
         <input type="time" id="end">
-        <input type="text" id="title" placeholder="Broneeringu põhjus">
+
+        <label for="title">Broneeringu põhjus:</label>
+        <input type="text" id="title" placeholder="Kirjeldus">
 
         <button onclick="addBooking()">Lisa broneering</button>
 
